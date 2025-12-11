@@ -1,6 +1,5 @@
-README – Simple Setup Guide
+README – Setup Guide
 
-This is a simple PHP API for products, shopping cart, and admin login.
 
 1. Install Dependencies
 
@@ -31,7 +30,7 @@ Move project into htdocs folder:
 htdocs/
 
 Open in browser:
-http://localhost/public
+http://localhost:8000/public
 
 
 Option 2 – Using PHP built-in server

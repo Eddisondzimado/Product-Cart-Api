@@ -1,0 +1,335 @@
+openapi: 3.0.0
+info:
+  title: Product & Shopping Cart API
+  version: 1.0.0
+  description: >
+    REST API for product management, shopping cart, and admin authentication.
+    Built in PHP (mysqli) with JWT authentication.
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+tags:
+  - name: Authentication
+    description: Admin login to obtain JWT token
+  - name: Products
+    description: CRUD operations for products
+  - name: Cart
+    description: Shopping cart operations
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        stockQuantity:
+          type: integer
+        imageUrls:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              size:
+                type: string
+              price:
+                type: number
+              stock:
+                type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    ProductInput:
+      type: object
+      required:
+        - name
+        - price
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        stockQuantity:
+          type: integer
+        imageUrls:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              size:
+                type: string
+              price:
+                type: number
+              stock:
+                type: integer
+
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: integer
+        name:
+          type: string
+        variant:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        total:
+          type: number
+
+    AddToCartInput:
+      type: object
+      required:
+        - productId
+        - variant
+        - quantity
+      properties:
+        productId:
+          type: string
+        variant:
+          type: string
+        quantity:
+          type: integer
+
+    CartResponse:
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        subtotal:
+          type: number
+        shipping:
+          type: number
+        vat:
+          type: number
+        total:
+          type: number
+
+paths:
+
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Admin login to receive JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: Invalid credentials
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "200":
+          description: Product created
+
+  /products/{id}:
+    put:
+      tags:
+        - Products
+      summary: Update an existing product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "200":
+          description: Product updated
+        
+    delete:
+      tags:
+        - Products
+      summary: Delete a product
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product deleted
+
+  /cart:
+    get:
+      tags:
+        - Cart
+      summary: Get cart details
+      responses:
+        "200":
+          description: Cart details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartResponse"
+
+    post:
+      tags:
+        - Cart
+      summary: Add an item to the cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToCartInput"
+      responses:
+        "200":
+          description: Item added and updated cart returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartResponse"
+
+  /cart/{id}:
+    put:
+      tags:
+        - Cart
+      summary: Update quantity of a cart item
+      parameters:
+        - name: id
+          in: path
+          description: Cart item ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quantity
+              properties:
+                quantity:
+                  type: integer
+                  example: 3
+      responses:
+        "200":
+          description: Cart item updated and full cart returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartResponse"
+
+    delete:
+      tags:
+        - Cart
+      summary: Remove an item from the cart
+      parameters:
+        - name: id
+          in: path
+          description: Cart item ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Cart item deleted and updated cart returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartResponse"

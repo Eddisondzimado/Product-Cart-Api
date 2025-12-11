@@ -3,6 +3,11 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
 require "../vendor/autoload.php";
 require "../controllers/AuthController.php";
@@ -16,7 +21,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 // login
 if ($uri[0] === "login" && $method === "POST") {
-    (new AuthController())->login($data);
+    (new AuthController())->login(json_decode(file_get_contents("php://input"), true));
     exit;
 }
 
