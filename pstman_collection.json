@@ -1,0 +1,190 @@
+{
+  "info": {
+    "name": "Product & Cart API",
+    "description": "REST API for product management, cart operations, and admin login",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"superAdmin\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["login"]
+        }
+      }
+    },
+    {
+      "name": "Get All Products",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8000/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["products"]
+        }
+      }
+    },
+    {
+      "name": "Create Product",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"PRoduct Name\",\n  \"description\": \"Example description\",\n  \"price\": 25.5,\n  \"category\": \"Example category\",\n  \"tags\": [\"bags\",\"Pizza\"],\n  \"stockQuantity\": 50,\n  \"imageUrls\": [\"https://example.com/example.jpg\"],\n  \"metadata\": {\"createdBy\":\"admin\"},\n  \"variants\": [{\"size\":\"example Variant\",\"price\":25.5,\"stock\":50}]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["products"]
+        }
+      }
+    },
+    {
+      "name": "Update Product",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"example new Updated\",\n  \"description\": \"Updated description\",\n  \"price\": 28,\n  \"category\": \"Test\",\n  \"tags\": [\"tage name exp\",\"exl tag\"],\n  \"stockQuantity\": 120,\n  \"imageUrls\": [\"https://example.com/example.jpg\"],\n  \"metadata\": {\"createdBy\":\"admin\"},\n  \"variants\": [{\"size\":\"Medium\",\"price\":28,\"stock\":60}]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/products/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["products","1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Product",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/products/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["products","1"]
+        }
+      }
+    },
+    {
+      "name": "Get Cart",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8000/cart",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["cart"]
+        }
+      }
+    },
+    {
+      "name": "Add to Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": 1,\n  \"variant\": \"Medium\",\n  \"quantity\": 2\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/cart",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["cart"]
+        }
+      }
+    },
+    {
+      "name": "Update Cart Item",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/cart/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["cart","1"]
+        }
+      }
+    },
+    {
+      "name": "Remove Cart Item",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8000/cart/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["cart","1"]
+        }
+      }
+    }
+  ]
+}
