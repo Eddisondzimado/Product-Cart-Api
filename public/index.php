@@ -2,7 +2,9 @@ $allowed_origins = [
     'http://localhost:5173',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://app.swaggerhub.com/apis/pegcodestechnologies/product-shopping-cart-api/1.0.0'
+    'https://app.swaggerhub.com',
+    'https://editor.swagger.io',
+    'http://editor.swagger.io'
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -15,12 +17,10 @@ header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Handle preflight immediately
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
-
 
 require "../vendor/autoload.php";
 require "../controllers/AuthController.php";
@@ -30,13 +30,16 @@ require "../middlewares/AuthMiddleware.php";
 
 $method = $_SERVER["REQUEST_METHOD"];
 $uri = explode("/", trim($_SERVER["REQUEST_URI"], "/"));
-$data = json_decode(file_get_contents("php://input"), true);
+
+$raw = file_get_contents("php://input");
+$data = json_decode($raw, true) ?: [];
 
 // login
 if ($uri[0] === "login" && $method === "POST") {
     (new AuthController())->login($data);
     exit;
 }
+
 
 
 // product endpoint
