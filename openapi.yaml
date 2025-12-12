@@ -8,7 +8,7 @@ info:
 
 servers:
   - url: https://aidexchatbot.com/api
-    description: Local development server
+    description: server
 
 tags:
   - name: Authentication
