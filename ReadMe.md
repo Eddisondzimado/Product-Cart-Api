@@ -45,7 +45,10 @@ Login to get token (Get Token)
 POST /login
 
 Enter username and password 
-{ "username": "exampleuser", "password": "exapassword12" }
+{ "username": "superAdmin", "password": "password123" }
+
+Enter username and password - use this password for swagger Login
+{ "username": "superAdmin", "password": "password123" }
 
 Get Products
 
