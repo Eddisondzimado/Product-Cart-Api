@@ -1,21 +1,9 @@
-$allowed_origins = [
-    'http://localhost:5173',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'https://app.swaggerhub.com',
-    'https://editor.swagger.io',
-    'http://editor.swagger.io'
-];
+<?php
 
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-
-if (in_array($origin, $allowed_origins)) {
-    header("Access-Control-Allow-Origin: $origin");
-}
-
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -31,11 +19,14 @@ require "../middlewares/AuthMiddleware.php";
 $method = $_SERVER["REQUEST_METHOD"];
 $uri = explode("/", trim($_SERVER["REQUEST_URI"], "/"));
 
+
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true) ?: [];
 
+
 // login
 if ($uri[0] === "login" && $method === "POST") {
+    echo "Debug - Login route matched\n";
     (new AuthController())->login($data);
     exit;
 }

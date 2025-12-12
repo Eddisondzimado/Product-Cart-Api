@@ -7,7 +7,7 @@ info:
     Built in PHP (mysqli) with JWT authentication.
 
 servers:
-  - url: http://localhost:8000
+  - url: https://aidexchatbot.com/api
     description: Local development server
 
 tags:
