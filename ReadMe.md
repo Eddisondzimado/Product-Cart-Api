@@ -32,6 +32,9 @@ htdocs/
 Open in browser:
 http://localhost:8000/public
 
+Open swagger url:
+https://app.swaggerhub.com/apis/pegcodestechnologies/product-shopping-cart-api/1.0.0
+
 
 Option 2 – Using PHP built-in server
 cd /public
