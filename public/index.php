@@ -1,13 +1,26 @@
-<?php
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS");
+$allowed_origins = [
+    'http://localhost:5173',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://app.swaggerhub.com/apis/pegcodestechnologies/product-shopping-cart-api/1.0.0'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
+
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-// Handle preflight requests
+
+// Handle preflight immediately
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
-    exit;
+    exit();
 }
+
 
 require "../vendor/autoload.php";
 require "../controllers/AuthController.php";
@@ -21,7 +34,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 // login
 if ($uri[0] === "login" && $method === "POST") {
-    (new AuthController())->login(json_decode(file_get_contents("php://input"), true));
+    (new AuthController())->login($data);
     exit;
 }
 
